@@ -1,6 +1,4 @@
 import httpx
-import base64
-from typing import Annotated
 from fastapi import HTTPException, status, UploadFile, File, Form
 from fastapi.routing import APIRouter
 
@@ -8,16 +6,14 @@ router = APIRouter(tags=["Eitaa"])
 
 
 @router.post('/send-data', status_code=status.HTTP_200_OK)
-async def create_post(file: Annotated[bytes, File()], token: Annotated[str, Form()], chat_id: Annotated[str, Form()], description: Annotated[str|None, Form()]):
-    file_data_base64 = base64.b64encode(file).decode('utf-8')
+async def create_post(file: UploadFile = File(...), token: str = Form(...), chat_id: str = Form(...), caption: str = Form(None)):
     url = f"https://eitaayar.ir/api/{token}/sendFile"
     send_data = {
         "chat_id": chat_id,
-        "file": file_data_base64,
-        "caption": description
+        "caption": caption
     }
     async with httpx.AsyncClient() as client:
-        response = await client.post(url, json=send_data)
+        response = await client.post(url, data=send_data, files={"file": file.file})
         if response.status_code == 200:
             return response.json()
         else:
