@@ -38,3 +38,6 @@ uvicorn main:app --reload
 ```bash
 http://127.0.0.1:8000/docs
 ```
+
+### مستندات ایتا
+جهت دریافت مستندات و اطلاعات ایتا به لینک زیر مراجعه کنید [لینک](https://eitaayar.ir/assets/download/API_eitaayar.ir.pdf)
